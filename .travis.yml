@@ -1,18 +1,42 @@
 language: java
-script:
- - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent verify sonar:sonar -Dsonar.projectKey=Noldorth_sample-application-students
+#script:
+ #- mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent verify sonar:sonar -Dsonar.projectKey=Noldorth_sample-application-students
 # - mvn clean verify
- - docker build -t noldorth/db sample-application-db-changelog-job
- - docker build -t noldorth/http sample-application-http-api-server
- - docker login --username=$username --password=$password
- - docker push noldorth/db
- - docker push noldorth/http
+# - docker build -t noldorth/db sample-application-db-changelog-job
+# - docker build -t noldorth/http sample-application-http-api-server
+# - docker login --username=$username --password=$password
+ #- docker push noldorth/db
+ #- docker push noldorth/http
+stages:
+ - build
+ - analyse
+ - deploy_docker
  
 addons:
   sonarcloud:
     organization: "noldorth"
     token:
       secure: $tokensonar # encrypted value of your token
+      
+jobs:
+ include:
+  - stage: build
+    name: "Lancement maven(build + test)"
+    script: mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent verify 
+  - stage: analyse
+    name: "Lancement sonar"
+    script: sonar:sonar -Dsonar.projectKey=Noldorth_sample-application-students
+  - stage: deploy_docker
+    name: "build docker + push"
+    script:
+     - docker build -t noldorth/db sample-application-db-changelog-job
+     - docker build -t noldorth/http sample-application-http-api-server
+     - docker login --username=$username --password=$password
+     - docker push noldorth/db
+     - docker push noldorth/http
+   
+    
+    
 
 #script:
   # the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
