@@ -1,5 +1,6 @@
 language: java
 script:
  - mvn clean verify
+ - echo 'looooool'
  - docker build -t noldorth/db sample-application-db-changelog-job
  - docker build -t noldorth/http sample-application-http-api-changelog-job
