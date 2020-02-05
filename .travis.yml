@@ -1,10 +1,20 @@
 language: java
 script:
- - mvn clean verify
+ - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
+# - mvn clean verify
  - docker build -t noldorth/db sample-application-db-changelog-job
  - docker build -t noldorth/http sample-application-http-api-server
  - docker login --username=$username --password=$password
  - docker push noldorth/db
  - docker push noldorth/http
  
+addons:
+  sonarcloud:
+    organization: "noldorth"
+    token:
+      secure: $tokensonar # encrypted value of your token
+
+#script:
+  # the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
+  
  
