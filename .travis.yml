@@ -1,6 +1,6 @@
 language: java
- script:
+script:
  - mvn clean verify
- services:
+services:
  - postgresql
 #lol
