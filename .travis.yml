@@ -1,6 +1,6 @@
 language: java
 script:
- - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
+ - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent verify sonar:sonar -Dsonar.projectKey=Noldorth_sample-application-students
 # - mvn clean verify
  - docker build -t noldorth/db sample-application-db-changelog-job
  - docker build -t noldorth/http sample-application-http-api-server
