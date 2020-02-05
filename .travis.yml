@@ -8,8 +8,8 @@ language: java
  #- docker push noldorth/db
  #- docker push noldorth/http
 stages:
- - build
- - analyse
+ - build_maven
+ - build_docker
  - deploy_docker
  
 addons:
@@ -20,17 +20,17 @@ addons:
       
 jobs:
  include:
-  - stage: build
-    name: "Lancement maven(build + test)"
-    script: mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent verify 
-  - stage: analyse
-    name: "Lancement sonar"
-    script: sonar:sonar -Dsonar.projectKey=Noldorth_sample-application-students
-  - stage: deploy_docker
-    name: "build docker + push"
-    script:
+  - stage: build_maven
+    name: "Lancement maven(build + test)+ sonar"
+    script: mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent verify sonar:sonar -Dsonar.projectKey=Noldorth_sample-application-students
+  - stage: build_docker
+    name: "Lancement build docker"
+    script: 
      - docker build -t noldorth/db sample-application-db-changelog-job
      - docker build -t noldorth/http sample-application-http-api-server
+  - stage: deploy_docker
+    name: "log + push docker"
+    script:
      - docker login --username=$username --password=$password
      - docker push noldorth/db
      - docker push noldorth/http
