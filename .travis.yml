@@ -3,3 +3,10 @@ script:
  - mvn clean verify
  - docker build -t noldorth/db sample-application-db-changelog-job
  - docker build -t noldorth/http sample-application-http-api-server
+ - docker login --username=$username --password=$password
+ - docker tag dbpostgrey noldorth/db
+ - docker tag htttpapi noldorth/http
+ - docker push noldorth/db
+ - docker push noldorth/http
+ 
+ 
